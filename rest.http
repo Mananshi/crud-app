@@ -1,0 +1,27 @@
+GET http://localhost:3000/api/products
+
+###
+GET http://localhost:3000/api/products/4
+
+###
+POST http://localhost:3000/api/products
+Content-Type: application/json
+
+{
+    "name":"Frame",
+    "price": 1000,
+    "categoryId": 3
+}
+
+###
+DELETE http://localhost:3000/api/products/6
+
+###
+PATCH http://localhost:3000/api/products/7
+Content-Type: application/json
+
+{
+    "name":"Photo Frame",
+    "price": 1200,
+    "categoryId": 3
+}
