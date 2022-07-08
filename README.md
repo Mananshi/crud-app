@@ -1,4 +1,6 @@
 # Crud App
+![image](https://user-images.githubusercontent.com/66679952/177975858-28ef023b-43d8-431f-a6f8-99a76e903e4e.png)
+<image src="https://user-images.githubusercontent.com/66679952/177975919-7559340f-4346-4c9e-accd-3fdc364e932d.png" alt="Prisma Studio - Product" width="60%" />
 
 ## Technologies/Packages used
 - Prisma (Prisma Client, Prisma Studio)
