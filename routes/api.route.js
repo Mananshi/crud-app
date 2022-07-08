@@ -49,7 +49,7 @@ router.delete('/products/:id', async (req, res, next) => {
     const {id} = req.params
     const deletedProduct = await prisma.product.delete({
       where:{
-        id: Number(id)
+        id: parseInt(id)
       }
     })
     res.json(deletedProduct)
@@ -63,7 +63,7 @@ router.patch('/products/:id', async (req, res, next) => {
     const {id} = req.params
     const product = await prisma.product.update({
       where:{
-        id: Number(id),
+        id: parseInt(id),
       },
       data: req.body,
       include: {
