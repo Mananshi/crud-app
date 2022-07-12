@@ -6,7 +6,6 @@ GET http://localhost:3000/api/products/4
 ###
 POST http://localhost:3000/api/products
 Content-Type: application/json
-
 {
     "name":"Frame",
     "price": 1000,
@@ -17,11 +16,25 @@ Content-Type: application/json
 DELETE http://localhost:3000/api/products/6
 
 ###
-PATCH http://localhost:3000/api/products/7
+PATCH http://localhost:3000/api/products/5
 Content-Type: application/json
 
 {
-    "name":"Photo Frame",
-    "price": 1200,
-    "categoryId": 3
+    "name":"Shrikhand",
+    "price": 200,
+    "categoryId": 2,
+    "quantity": 5
 }
+
+###
+GET http://localhost:3000/api/category
+
+###
+POST http://localhost:3000/api/category
+Content-Type: application/json
+{
+    "name":"clothes",
+}
+
+###
+DELETE http://localhost:3000/api/category/4
