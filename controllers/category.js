@@ -14,16 +14,16 @@ const getAllCategories = async (req, res, next) => {
   }
 };
 
-// const addNewCategory = async (req, res, next) => {
-//   try{
-//     const category = await prisma.category.create({
-//       data: req.body,
-//     })
-//     res.json(category);
-//   } catch(error){
-//     next(error);
-//   }
-// };
+const addNewCategory = async (req, res, next) => {
+  try{
+    const category = await prisma.category.create({
+      data: req.body,
+    })
+    res.json(category);
+  } catch(error){
+    next(error);
+  }
+};
 
 const addNewCategoryandProducts = async (req, res, next) => {
   try{
@@ -53,4 +53,4 @@ const deleteCategory = async (req, res, next) => {
 };
 
 
-module.exports = {getAllCategories, addNewCategoryandProducts, deleteCategory}
+module.exports = {getAllCategories, addNewCategoryandProducts, deleteCategory, addNewCategory}

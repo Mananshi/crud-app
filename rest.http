@@ -7,37 +7,68 @@ GET http://localhost:3000/api/products-sorted
 GET http://localhost:3000/api/products/4
 
 ###
-GET http://localhost:3000/api/products-name/Shrikhand
+GET http://localhost:3000/api/products-name/mouse
 
 ###
 POST http://localhost:3000/api/products
 Content-Type: application/json
+
 {
-    "name":"Frame",
-    "price": 1000,
-    "categoryId": 3
+  "nameP":"pendrive",
+  "categoryId": 1,
+  "price": 100,
+  "quantity": 1
 }
 
 ###
-POST http://localhost:3000/api/products-new
+GET http://localhost:3000/api/products-upsert
+
+###
+POST http://localhost:3000/api/products-c
 Content-Type: application/json
 
 {
-	
+  "nameC": "accessories",
+  "product":[
+    {
+      "nameP":"iwatch",
+      "categoryId": 2,
+      "price": 6000,
+      "quantity": 1
+    },
+    {
+      "nameP":"airpods",
+      "categoryId": 2,
+      "price": 3000,
+      "quantity": 4
+    }
+  ]
 }
 
+
+
 ###
-DELETE http://localhost:3000/api/products/6
+PATCH http://localhost:3000/api/products-upsert
+Content-Type: application/json
+
+{
+	"name":"mouse",
+	"categoryId": 2,
+	"price": 395,
+	"quantity": 3
+}
+###
+DELETE http://localhost:3000/api/products/8
 
 ###
 PATCH http://localhost:3000/api/products/5
 Content-Type: application/json
 
 {
-    "name":"Shrikhand",
-    "price": 200,
-    "categoryId": 2,
-    "quantity": 5
+		"name":"Shrikhand",
+		"price": 200,
+		"categoryId": 2,
+		"quantity": 5
 }
 
 ###
@@ -48,8 +79,8 @@ POST http://localhost:3000/api/category
 Content-Type: application/json
 
 {
-    "name":"clothes",
+	"nameC":"gadgets"
 }
 
 ###
-DELETE http://localhost:3000/api/category/4
+DELETE http://localhost:3000/api/category/6

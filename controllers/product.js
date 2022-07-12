@@ -1,6 +1,6 @@
-const {PrismaClient} = require('@prisma/client')
+const {PrismaClient} = require('@prisma/client');
+const express = require('express');
 const prisma = new PrismaClient();
-
 
 const getAllProducts = async (req, res, next) => {
   try{
@@ -75,32 +75,12 @@ const updateProduct = async (req, res, next) => {
   }
 };
 
-const getName = async (req, res, next) => {
-  try{
-    const {name} = req.params
-    const product = await prisma.product.findUnique({
-      where: {
-        name: name,
-      },
-      select: {
-        id: true,
-        name: true,
-        price: true,
-        category: true,
-      },
-    })
-    res.json(product);
-  } catch(error){
-    next(error)
-  }
-};
-
 const sortedProducts = async (req, res, next) => {
   try{
     const products = await prisma.product.findMany({
       orderBy:[
         {
-          name: 'asc'
+          nameP: 'asc'
         }
       ],
       include:{
@@ -113,14 +93,65 @@ const sortedProducts = async (req, res, next) => {
   }
 };
 
-const addCandP = async (req, res, next) => {
+const upsertExample = async (req, res, next) => {
   try{
-        
+    const upsertProduct = await prisma.product.upsert({
+      where:{
+        nameP: 'vase'
+      },
+      update:{
+        price: 450
+      },
+      create:{
+        nameP: 'vase',
+        price: 450,
+        categoryId: 2
+      }
+    })
+    res.json(upsertProduct);
   } catch(error){
-    
+    next(error);
   }
 };
 
+const getName = async (req, res, next) => {
+  try{
+    const {productName} = req.params
+    const product = await prisma.product.findUnique({
+      where: {
+        nameP: productName,
+      },
+      select: {
+        id: true,
+        nameP: true,
+        price: true,
+        category: true
+      },
+    })
+    res.json(product);
+  } catch(error){
+    next(error)
+  }
+};
+
+const cAndP = async (req, res, next) => {
+  try{
+    const newC = await prisma.product.create({
+      data: req.body
+    }) 
+    const newP = await prisma.product.createMany({
+      data: [
+        nameP = req.body.product.nameP,
+        categoryId = req.body.product.categoryId,
+        price = req.body.product.price,
+        quantity = req.body.product.quantity
+      ]
+    });   
+    res.json(newC, newP)
+  } catch(error){
+    next(error);
+  }
+}
 
 
-module.exports = {getAllProducts, getProductById, addNewProduct, deleteProduct, updateProduct, getName, sortedProducts, addCandP}
+module.exports = {getAllProducts, getProductById, addNewProduct, deleteProduct, updateProduct, getName, sortedProducts, upsertExample, cAndP}
