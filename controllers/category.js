@@ -25,7 +25,6 @@ const getAllCategories = async (req, res, next) => {
 //   }
 // };
 
-
 const addNewCategoryandProducts = async (req, res, next) => {
   try{
     const categories = await prisma.category.findMany({
@@ -38,7 +37,6 @@ const addNewCategoryandProducts = async (req, res, next) => {
     next(error)
   }
 };
-
 
 const deleteCategory = async (req, res, next) => {
   try{

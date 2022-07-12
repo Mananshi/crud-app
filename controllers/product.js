@@ -15,13 +15,12 @@ const getAllProducts = async (req, res, next) => {
   }
 };
 
-
 const getProductById = async (req, res, next) => {
   try{
     const {id} = req.params
     const product = await prisma.product.findUnique({
       where:{
-        id: Number(id)
+        id: parseInt(id)
       },
       include: {
         category: true
@@ -76,6 +75,52 @@ const updateProduct = async (req, res, next) => {
   }
 };
 
+const getName = async (req, res, next) => {
+  try{
+    const {name} = req.params
+    const product = await prisma.product.findUnique({
+      where: {
+        name: name,
+      },
+      select: {
+        id: true,
+        name: true,
+        price: true,
+        category: true,
+      },
+    })
+    res.json(product);
+  } catch(error){
+    next(error)
+  }
+};
+
+const sortedProducts = async (req, res, next) => {
+  try{
+    const products = await prisma.product.findMany({
+      orderBy:[
+        {
+          name: 'asc'
+        }
+      ],
+      include:{
+        category: true,
+      }
+    })
+    res.json(products);
+  } catch(error){
+    next(error);
+  }
+};
+
+const addCandP = async (req, res, next) => {
+  try{
+        
+  } catch(error){
+    
+  }
+};
 
 
-module.exports = {getAllProducts, getProductById, addNewProduct, deleteProduct, updateProduct}
+
+module.exports = {getAllProducts, getProductById, addNewProduct, deleteProduct, updateProduct, getName, sortedProducts, addCandP}

@@ -1,7 +1,13 @@
 GET http://localhost:3000/api/products
 
 ###
+GET http://localhost:3000/api/products-sorted
+
+###
 GET http://localhost:3000/api/products/4
+
+###
+GET http://localhost:3000/api/products-name/Shrikhand
 
 ###
 POST http://localhost:3000/api/products
@@ -10,6 +16,14 @@ Content-Type: application/json
     "name":"Frame",
     "price": 1000,
     "categoryId": 3
+}
+
+###
+POST http://localhost:3000/api/products-new
+Content-Type: application/json
+
+{
+	
 }
 
 ###
@@ -32,6 +46,7 @@ GET http://localhost:3000/api/category
 ###
 POST http://localhost:3000/api/category
 Content-Type: application/json
+
 {
     "name":"clothes",
 }
