@@ -1,9 +1,6 @@
 const router = require('express').Router();
-const {PrismaClient} = require('@prisma/client')
 const {getAllProducts, getProductById, addNewProduct, deleteProduct, updateProduct, upsertExample, sortedProducts, getName, cAndP} = require('../controllers/product')
 const {getAllCategories, addNewCategoryandProducts, deleteCategory, addNewCategory} = require('../controllers/category');
-
-const prisma = new PrismaClient();
 
 //Routes for Products
 router.get('/products', getAllProducts);
