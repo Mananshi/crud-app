@@ -8,17 +8,31 @@ datasource db {
 }
 
 model Product {
-  id         Int       @id @default(autoincrement())
-  nameP      String    @unique @default("product")
-  price      Int       @default(999)
-  createdAt  DateTime  @default(now())
+  id       Int     @id @default(autoincrement())
+  name     String
+  price    Float
+  quantity Int
+  deleted  Boolean @default(false)
+
+  // relations
   categoryId Int?
-  quantity   Int       @default(1)
   category   Category? @relation(fields: [categoryId], references: [id])
+
+  //
+  createdAt DateTime @default(now())
+
+  @@map("products")
 }
 
 model Category {
-  id       Int       @id @default(autoincrement())
-  nameC    String    @default("category")
+  id   Int    @id @default(autoincrement())
+  name String
+
+  //
   products Product[]
+
+  //
+  createdAt DateTime @default(now())
+
+  @@map("categories")
 }

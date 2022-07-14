@@ -1,157 +1,204 @@
-const {PrismaClient} = require('@prisma/client');
-const express = require('express');
+const { PrismaClient } = require("@prisma/client");
+const express = require("express");
 const prisma = new PrismaClient();
 
 const getAllProducts = async (req, res, next) => {
-  try{
+  try {
     const products = await prisma.product.findMany({
-      include:{
-        category: true
+      where: { deleted: false },
+      select: {
+        category: { select: { id: true, name: true } }
       }
     });
-    res.json(products)
-  } catch(error){
-    next(error)
+    res.json(products);
+  } catch (error) {
+    next(error);
   }
 };
 
 const getProductById = async (req, res, next) => {
-  try{
-    const {id} = req.params
+  try {
+    const { id } = req.params;
+
     const product = await prisma.product.findUnique({
-      where:{
+      where: {
         id: parseInt(id)
       },
       include: {
         category: true
       }
-    })
-    res.json(product)
-  } catch(error){
+    });
+
+    res.json(product);
+  } catch (error) {
     next(error);
   }
 };
 
 const addNewProduct = async (req, res, next) => {
-  try{
-    const product = await prisma.product.create({
-      data: req.body,
-    })
-    res.json(product);
-  } catch(error){
+  try {
+    // const product = await prisma.product.create({
+    //   data: req.body
+    // });
+    await upsertProduct(-1, req.body);
+
+    res.json("Product added");
+  } catch (error) {
     next(error);
   }
 };
 
 const deleteProduct = async (req, res, next) => {
-  try{
-    const {id} = req.params
-    const deletedProduct = await prisma.product.delete({
-      where:{
+  try {
+    const { id } = req.params;
+    const deletedProduct = await prisma.product.update({
+      where: {
         id: parseInt(id)
-      }
-    })
-    res.json(deletedProduct)
-  } catch(error){
+      },
+      data: { deleted: true }
+    });
+    res.json(deletedProduct);
+  } catch (error) {
     next(error);
   }
 };
 
 const updateProduct = async (req, res, next) => {
-  try{
-    const {id} = req.params
-    const product = await prisma.product.update({
-      where:{
-        id: parseInt(id),
-      },
-      data: req.body,
-      include: {
-        category: true
-      }
-    })
-    res.json(product);
-  } catch(error){
+  try {
+    const { id } = req.params;
+
+    // await prisma.product.update({
+    //   where: {
+    //     id: parseInt(id)
+    //   },
+    //   data: req.body
+    // });
+
+    await upsertProduct(id, req.body);
+
+    res.json("Product updated");
+  } catch (error) {
     next(error);
   }
 };
 
 const sortedProducts = async (req, res, next) => {
-  try{
+  try {
+    let { name } = req.query.name;
+
     const products = await prisma.product.findMany({
-      orderBy:[
-        {
-          nameP: 'asc'
-        }
-      ],
-      include:{
-        category: true,
-      }
-    })
+      where: { name: { contains: name, mode: "insensitive" } }
+    });
+
     res.json(products);
-  } catch(error){
+  } catch (error) {
     next(error);
   }
 };
 
 const upsertExample = async (req, res, next) => {
-  try{
+  try {
     const upsertProduct = await prisma.product.upsert({
-      where:{
-        nameP: 'vase'
+      where: {
+        nameP: "vase"
       },
-      update:{
+      update: {
         price: 450
       },
-      create:{
-        nameP: 'vase',
+      create: {
+        nameP: "vase",
         price: 450,
         categoryId: 2
       }
-    })
+    });
+
     res.json(upsertProduct);
-  } catch(error){
+  } catch (error) {
     next(error);
   }
 };
 
+const upsertProduct = async (id, data) => {
+  try {
+    await prisma.product.upsert({
+      where: { id: parseInt(id) },
+      update: data,
+      create: data
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const getName = async (req, res, next) => {
-  try{
-    const {productName} = req.params
-    const product = await prisma.product.findUnique({
+  try {
+    const { productName } = req.params;
+
+    const product = await prisma.product.findFirst({
       where: {
-        nameP: productName,
+        nameP: productName
       },
       select: {
         id: true,
         nameP: true,
         price: true,
         category: true
-      },
-    })
+      }
+    });
+
     res.json(product);
-  } catch(error){
-    next(error)
+  } catch (error) {
+    next(error);
   }
 };
 
 const cAndP = async (req, res, next) => {
-  try{
+  try {
+    /* 
+    {
+      categoryName: 'phones',
+      products: [
+        {
+          name: 'noting'
+        }
+      ]
+    }
+    */
+
+    await prisma.category.create({
+      data: {
+        name: req.body.categoryName,
+        products: { createMany: req.body.products }
+      }
+    });
+
+    // Scrapping following code
     const newC = await prisma.product.create({
       data: req.body
-    }) 
+    });
     const newP = await prisma.product.createMany({
       data: [
-        nameP = req.body.product.nameP,
-        categoryId = req.body.product.categoryId,
-        price = req.body.product.price,
-        quantity = req.body.product.quantity
+        (nameP = req.body.product.nameP),
+        (categoryId = req.body.product.categoryId),
+        (price = req.body.product.price),
+        (quantity = req.body.product.quantity)
       ]
-    });   
-    res.json(newC, newP)
-  } catch(error){
+    });
+
+    res.json(newC, newP);
+  } catch (error) {
     next(error);
   }
-}
+};
 
-
-module.exports = {getAllProducts, getProductById, addNewProduct, deleteProduct, updateProduct, getName, sortedProducts, upsertExample, cAndP}
+module.exports = {
+  getAllProducts,
+  getProductById,
+  addNewProduct,
+  deleteProduct,
+  updateProduct,
+  getName,
+  sortedProducts,
+  upsertExample,
+  cAndP
+};
